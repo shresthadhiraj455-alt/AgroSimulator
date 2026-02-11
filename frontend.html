@@ -162,5 +162,109 @@
             </div>
         </div>
     </div>
+     <!-- RESEARCH HUB -->
+    <div x-show="page === 'research'" x-cloak x-transition class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 bg-white p-8 rounded-3xl border border-stone-200">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-xl font-bold">Yield vs Water Efficiency</h3>
+                    <div class="flex gap-2">
+                        <button class="px-3 py-1.5 bg-stone-100 rounded-lg text-xs font-bold">Export PDF</button>
+                        <button class="px-3 py-1.5 bg-stone-100 rounded-lg text-xs font-bold">CSV</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="yieldChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-3xl border border-stone-200">
+                <h3 class="text-xl font-bold mb-8">Crop Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="distributionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3 bg-emerald-900 rounded-3xl p-12 text-white relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl">
+                    <h2 class="text-3xl font-black mb-4">Global Resilience Research</h2>
+                    <p class="text-emerald-100/70 mb-8 leading-relaxed">Our latest open-source research paper on "Climate-Adaptive Cereals in Sub-Saharan Africa" is now available for download. Access the full dataset and findings.</p>
+                    <button class="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-2xl transition-all">Download Dataset (2.4 GB)</button>
+                </div>
+                <i data-lucide="leaf" class="absolute -bottom-10 -right-10 w-64 h-64 text-emerald-800/40 rotate-12"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- PLANT DETAILS MODAL -->
+    <div x-show="modalOpen" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm" x-transition.opacity>
+        <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-[40px] overflow-hidden flex flex-col md:flex-row relative" @click.away="modalOpen = false">
+            <button @click="modalOpen = false" class="absolute top-6 right-6 z-20 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full text-white flex items-center justify-center hover:bg-white hover:text-stone-900 transition-all">
+                <i data-lucide="x"></i>
+            </button>
+
+            <div class="w-full md:w-2/5 h-64 md:h-auto overflow-hidden">
+                <img :src="selectedPlant?.image" class="w-full h-full object-cover">
+            </div>
+
+            <div class="flex-1 p-8 md:p-12 overflow-y-auto">
+                <span class="text-emerald-600 font-bold text-xs uppercase tracking-widest" x-text="selectedPlant?.category"></span>
+                <h2 class="text-4xl font-black mt-2 mb-1 text-stone-900" x-text="selectedPlant?.name"></h2>
+                <p class="text-xl italic text-stone-400 mb-8" x-text="selectedPlant?.scientificName"></p>
+
+                <div class="grid grid-cols-2 gap-4 mb-10">
+                    <div class="p-4 bg-stone-50 rounded-2xl border border-stone-100">
+                        <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Water Need</p>
+                        <p class="font-bold" x-text="selectedPlant?.waterNeeds"></p>
+                    </div>
+                    <div class="p-4 bg-stone-50 rounded-2xl border border-stone-100">
+                        <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Temp Range</p>
+                        <p class="font-bold" x-text="selectedPlant?.idealTemp"></p>
+                    </div>
+                    <div class="p-4 bg-stone-50 rounded-2xl border border-stone-100">
+                        <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Seed Type</p>
+                        <p class="font-bold text-sm" x-text="selectedPlant?.seedType"></p>
+                    </div>
+                    <div class="p-4 bg-stone-50 rounded-2xl border border-stone-100">
+                        <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Growth Time</p>
+                        <p class="font-bold text-sm" x-text="selectedPlant?.growthTime"></p>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div>
+                        <h4 class="font-black text-lg mb-3 flex items-center gap-2">
+                            <i data-lucide="info" class="w-5 h-5 text-emerald-600"></i> Description
+                        </h4>
+                        <p class="text-stone-500 leading-relaxed" x-text="selectedPlant?.description"></p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-black text-lg mb-4 text-red-600">Threats</h4>
+                            <ul class="space-y-2">
+                                <template x-for="threat in selectedPlant?.threats">
+                                    <li class="flex items-center gap-2 text-sm font-bold text-stone-600">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+                                        <span x-text="threat"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-lg mb-4 text-emerald-600">Advantages</h4>
+                            <ul class="space-y-2">
+                                <template x-for="adv in selectedPlant?.advantages">
+                                    <li class="flex items-center gap-2 text-sm font-bold text-stone-600">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                                        <span x-text="adv"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
